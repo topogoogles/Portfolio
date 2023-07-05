@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Result</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <h1>Product Result</h1>
+    {% if search_results.empty %}
+    <h3>Try a different barcode! No results found.</h3>
+    {% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Code</th>
+                <th>Product Name</th>
+                <th>Brands</th>
+                <th>Quantity</th>
+                <th>Stores</th>
+                <th>Nutri-Score</th>
+                <th>Nutri-Grade</th>
+                <th>Product URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in search_results.iterrows() %}
+            <tr>
+                <td><img src="{{ row['image_url'] }}" width="85" height="75" class="center"></td>
+                <td>{{ row['code'] }}</td>
+                <td>{{ row['product_name'] }}</td>
+                <td>{{ row['brands'] }}</td>
+                <td>{{ row['quantity'] }}</td>
+                <td>{{ row['stores'] }}</td>
+                <td>{{ row['nutriscore_score'] }}</td>
+                <td>
+                    {% if row['nutriscore_grade'] == 'a' %}
+                    <img src="https://www.hofladen-sauerland.de/img/nutri_score/a-nutri-score.png" width="120"
+                        height="30" class="center">
+                    {% elif row['nutriscore_grade'] == 'b' %}
+                    <img src="https://www.hofladen-sauerland.de/img/nutri_score/b-nutri-score.png" width="120"
+                        height="30" class="center">
+                    {% elif row['nutriscore_grade'] == 'c' %}
+                    <img src="https://www.hofladen-sauerland.de/img/nutri_score/c-nutri-score.png" width="120"
+                        height="30" class="center">
+                    {% elif row['nutriscore_grade'] == 'd' %}
+                    <img src="https://www.hofladen-sauerland.de/img/nutri_score/d-nutri-score.png" width="120"
+                        height="30" class="center">
+                    {% elif row['nutriscore_grade'] == 'e' %}
+                    <img src="https://www.hofladen-sauerland.de/img/nutri_score/e-nutri-score.png" width="120"
+                        height="30" class="center">
+                    {% endif %}
+                </td>
+                <td><a href="{{ row['url'] }}">See more at OpenFoodFacts.org</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    <form method="POST" id="code_form" action="{{ url_for('search') }}">
+        <label for="code">SCAN A BARCODE / TYPE AN EAN CODE</label>
+        <input type="text" id="code" name="code" autofocus>
+        <input type="submit" value="Search">
+    </form>
+</body>
+
+</html>
